@@ -1,0 +1,11 @@
+{
+  "name": "regex-tester",
+  "version": "1.0.0",
+  "description": "Regex Tester: live match highlighting, groups, replace and split previews, a token explainer in English and Turkish, and a guard against catastrophic backtracking.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  },
+  "license": "MIT"
+}

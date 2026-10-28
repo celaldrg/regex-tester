@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Regex Tester</title>
+    <meta name="description" content="Test JavaScript regular expressions in the browser: live match highlights, capture groups, replace and split previews, a plain-language explanation of every token and shareable links.">
+    <meta name="theme-color" content="#0f172a">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Regex Tester">
+    <meta property="og:description" content="Live JavaScript regular expressions: inline highlights, groups, replace and split previews, explanations and share links.">
+    <meta property="og:url" content="https://celaldrg.github.io/regex-tester/">
+    <meta property="og:image" content="https://celaldrg.github.io/regex-tester/docs/screenshot.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23c4b5fd'/%3E%3Ccircle cx='10' cy='21' r='2.6' fill='%231e1b4b'/%3E%3Cpath d='M21 9v10M16.7 11.5l8.6 5M16.7 16.5l8.6-5' stroke='%231e1b4b' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E">
+    <link rel="stylesheet" href="style.css">
+    <script type="module" src="src/main.js"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#pattern-input" data-i18n="app.skip">Skip to the pattern</a>
+
+    <header class="app-header">
+      <div class="wrap header-inner">
+        <div class="brand">
+          <svg class="logo" viewBox="0 0 32 32" aria-hidden="true">
+            <rect width="32" height="32" rx="9" fill="#c4b5fd"/>
+            <circle cx="10" cy="21" r="2.6" fill="#1e1b4b"/>
+            <path d="M21 9v10M16.7 11.5l8.6 5M16.7 16.5l8.6-5" stroke="#1e1b4b" stroke-width="2.4" stroke-linecap="round"/>
+          </svg>
+          <div class="brand-text">
+            <h1 data-i18n="app.title">Regex Tester</h1>
+            <p class="tagline" data-i18n="app.tagline">Live JavaScript regular expressions</p>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button type="button" class="btn btn-ghost" id="share-btn">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15V3M7.5 7.5 12 3l4.5 4.5M5 13v6a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-6"/></svg>
+            <span class="btn-label" data-i18n="header.share">Share</span>
+          </button>
+          <button type="button" class="btn btn-accent" id="reset-btn">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1L3.5 8.5"/><path d="M3.5 3.5v5h5"/></svg>
+            <span class="btn-label" data-i18n="header.reset">Reset</span>
+          </button>
+          <button type="button" class="btn btn-lang" id="lang-btn">
+            <span data-i18n="header.langShort">TR</span>
+            <span class="visually-hidden" data-i18n="header.langLabel">Switch to Turkish</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="wrap layout" id="layout">
+      <section class="card pattern-card" aria-labelledby="pattern-label">
+        <div class="card-head">
+          <label class="card-title" id="pattern-label" for="pattern-input" data-i18n="pattern.label">Regular expression</label>
+          <div class="tools">
+            <button type="button" class="tool" id="explain-btn" aria-expanded="false" aria-controls="explain-panel">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.01"/></svg>
+              <span data-i18n="tools.explain">Explain</span>
+            </button>
+            <button type="button" class="tool" id="examples-btn" aria-haspopup="dialog">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H19v15H6.5A1.5 1.5 0 0 0 5 19.5zM5 19.5A1.5 1.5 0 0 0 6.5 21H19M9 7.5h6"/></svg>
+              <span data-i18n="tools.examples">Examples</span>
+            </button>
+            <button type="button" class="tool" id="cheats-btn" aria-haspopup="dialog">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5M9 13h6M9 17h4"/></svg>
+              <span data-i18n="tools.cheats">Cheat sheet</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="pattern-shell" id="pattern-shell">
+          <span class="delim" aria-hidden="true">/</span>
+          <div class="editor editor-pattern">
+            <div class="mirror" id="pattern-mirror" aria-hidden="true"></div>
+            <textarea class="field" id="pattern-input" rows="1" spellcheck="false" autocomplete="off" autocapitalize="off" autocorrect="off" data-i18n-placeholder="pattern.placeholder" placeholder="Type a pattern, e.g. \d+"></textarea>
+          </div>
+          <span class="delim" aria-hidden="true">/</span>
+          <span class="flag-echo" id="flag-echo" aria-hidden="true"></span>
+        </div>
+
+        <div class="flags" role="group" aria-labelledby="flags-label">
+          <span class="flags-label" id="flags-label" data-i18n="flags.label">Flags</span>
+          <div class="flag-list" id="flag-list"></div>
+        </div>
+
+        <p class="status" id="status" role="status"><span class="status-dot" aria-hidden="true"></span><span id="status-text"></span></p>
+        <div class="notice" id="notice" hidden>
+          <p class="notice-title" id="notice-title"></p>
+          <p class="notice-body" id="notice-body"></p>
+        </div>
+      </section>
+
+      <aside class="card explain-card" id="explain-panel" aria-labelledby="explain-title" hidden>
+        <div class="card-head">
+          <h2 class="card-title" id="explain-title" data-i18n="explain.title">Explanation</h2>
+          <button type="button" class="icon-btn" id="explain-close" data-i18n-label="explain.close" aria-label="Close the explanation">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+          </button>
+        </div>
+        <p class="hint" data-i18n="explain.hint">Hover or tap a token to find it in the pattern.</p>
+        <ol class="token-list" id="token-list"></ol>
+        <p class="empty" id="tokens-empty" data-i18n="explain.empty" hidden>Type a pattern to see each part explained.</p>
+      </aside>
+
+      <section class="card text-card" aria-labelledby="text-label">
+        <div class="card-head">
+          <label class="card-title" id="text-label" for="text-input" data-i18n="text.label">Test text</label>
+          <ul class="legend" id="legend" data-i18n-label="legend.label" aria-label="Colour key" hidden></ul>
+        </div>
+        <p class="loaded-example" id="example-note" hidden></p>
+        <div class="text-shell">
+          <div class="editor editor-text">
+            <div class="mirror" id="text-mirror" aria-hidden="true"></div>
+            <textarea class="field" id="text-input" rows="4" spellcheck="false" autocomplete="off" autocapitalize="off" autocorrect="off" data-i18n-placeholder="text.placeholder" placeholder="Type or paste the text to test…"></textarea>
+          </div>
+        </div>
+      </section>
+
+      <section class="card results-card" id="results-card" aria-labelledby="results-title">
+        <h2 class="visually-hidden" id="results-title" data-i18n="results.label">Results</h2>
+        <div class="tabs" id="tabs" role="tablist" aria-labelledby="results-title">
+          <button type="button" class="tab" role="tab" id="tab-matches" data-tab="matches" aria-controls="panel-matches" aria-selected="true">
+            <span data-i18n="tab.matches">Matches</span>
+            <span class="badge" id="match-badge">–</span>
+          </button>
+          <button type="button" class="tab" role="tab" id="tab-replace" data-tab="replace" aria-controls="panel-replace" aria-selected="false" tabindex="-1">
+            <span data-i18n="tab.replace">Replace</span>
+          </button>
+          <button type="button" class="tab" role="tab" id="tab-split" data-tab="split" aria-controls="panel-split" aria-selected="false" tabindex="-1">
+            <span data-i18n="tab.split">Split</span>
+          </button>
+        </div>
+
+        <div class="panel" id="panel-matches" role="tabpanel" aria-labelledby="tab-matches">
+          <ol class="match-list" id="match-list"></ol>
+          <p class="empty" id="matches-empty" hidden></p>
+          <p class="more" id="matches-more" hidden></p>
+        </div>
+
+        <div class="panel" id="panel-replace" role="tabpanel" aria-labelledby="tab-replace" hidden>
+          <label class="field-label" for="replace-input" data-i18n="replace.label">Replacement</label>
+          <input class="input" id="replace-input" type="text" spellcheck="false" autocomplete="off" autocapitalize="off" autocorrect="off" data-i18n-placeholder="replace.placeholder" placeholder="e.g. $1 or $&lt;name&gt;">
+          <div class="chips-row">
+            <span class="chips-label" id="insert-label" data-i18n="replace.insert">Insert</span>
+            <div class="chips" id="insert-chips" role="group" aria-labelledby="insert-label"></div>
+          </div>
+          <div class="output-head">
+            <span class="field-label" data-i18n="replace.output">Result</span>
+            <span class="count" id="replace-count"></span>
+            <button type="button" class="btn btn-small" id="copy-output">
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h8"/></svg>
+              <span data-i18n="replace.copy">Copy</span>
+            </button>
+          </div>
+          <pre class="output" id="replace-output"></pre>
+        </div>
+
+        <div class="panel" id="panel-split" role="tabpanel" aria-labelledby="tab-split" hidden>
+          <div class="output-head">
+            <span class="field-label" data-i18n="split.title">Parts</span>
+            <span class="count" id="split-count"></span>
+          </div>
+          <ol class="part-list" id="part-list"></ol>
+        </div>
+      </section>
+    </main>
+
+    <footer class="wrap app-footer">
+      <p>MIT · <a href="https://github.com/celaldrg/regex-tester" data-i18n="footer.source">Source on GitHub</a></p>
+    </footer>
+
+    <dialog class="drawer" id="cheats-dialog" aria-labelledby="cheats-title">
+      <div class="dialog-body">
+        <div class="dialog-head">
+          <h2 id="cheats-title" data-i18n="cheats.title">Cheat sheet</h2>
+          <button type="button" class="icon-btn" data-close data-i18n-label="cheats.close" aria-label="Close the cheat sheet">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+          </button>
+        </div>
+        <p class="hint" data-i18n="cheats.hint">Tap an item to add it to the pattern. Flags switch on or off.</p>
+        <div class="cheat-sections" id="cheat-sections"></div>
+      </div>
+    </dialog>
+
+    <dialog class="sheet" id="examples-dialog" aria-labelledby="examples-title">
+      <div class="dialog-body">
+        <div class="dialog-head">
+          <h2 id="examples-title" data-i18n="examples.title">Example library</h2>
+          <button type="button" class="icon-btn" data-close data-i18n-label="examples.close" aria-label="Close the example library">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+          </button>
+        </div>
+        <p class="hint" data-i18n="examples.hint">Each example loads a pattern with lines that should and should not match.</p>
+        <ul class="example-list" id="example-list"></ul>
+      </div>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>
